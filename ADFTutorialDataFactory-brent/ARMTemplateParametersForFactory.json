@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADFTutorialDataFactory-brent"
+		},
+		"ADLSGen2_accountKey": {
+			"value": ""
+		},
+		"measadvtestftp_privateKeyContent": {
+			"value": ""
+		},
+		"measadvtestftp_passPhrase": {
+			"value": ""
+		},
+		"ADLSGen2_properties_typeProperties_url": {
+			"value": "https://measadvtestftp.dfs.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://MeasAdvKeyVault-dev.vault.azure.net/"
+		},
+		"AzureSqlDatabase1_properties_typeProperties_connectionString_secretName": {
+			"value": "SQL-CONNECTION-STRING-904ab117-ffda-46e9-aabd-869b63daaafa"
+		},
+		"measadvtestftp_properties_typeProperties_host": {
+			"value": "measadvtestftp.blob.core.windows.net"
+		},
+		"measadvtestftp_properties_typeProperties_userName": {
+			"value": "measadvtestftp.measadvftpuser01"
+		}
+	}
+}
