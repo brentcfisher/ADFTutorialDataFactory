@@ -1,0 +1,9 @@
+{
+	"name": "ADFTutorialDataFactory-brent",
+	"location": "canadacentral",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "475f42ff-2c8c-4db0-845f-a45e9b434298",
+		"tenantId": "d1fe8e44-4d35-4dad-8ea9-d9d9cb9a988c"
+	}
+}
