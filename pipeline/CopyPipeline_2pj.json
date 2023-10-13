@@ -38,7 +38,122 @@
 						}
 					},
 					"sink": {
-						"type": "AzureSqlSink"
+						"type": "AzureSqlSink",
+						"sqlWriterStoredProcedureName": "[dbo].[writeReadingRawDy]",
+						"storedProcedureParameters": {
+							"adjustmentCodeName": {
+								"type": "String"
+							},
+							"chartLabelId": {
+								"type": "Int32"
+							},
+							"dqInfoName": {
+								"type": "String"
+							},
+							"editStateName": {
+								"type": "String"
+							},
+							"energy": {
+								"type": "Double"
+							},
+							"energyAccum": {
+								"type": "Double"
+							},
+							"flowTime": {
+								"type": "Double"
+							},
+							"gqHistoryTypeCode": {
+								"type": "Byte"
+							},
+							"gqId": {
+								"type": "Int32"
+							},
+							"gqLastModTime": {
+								"type": "DateTime"
+							},
+							"gqTimeReverse": {
+								"type": "Int32"
+							},
+							"hydrocarbonDewpoint": {
+								"type": "Double"
+							},
+							"intermediateValue": {
+								"type": "Double"
+							},
+							"isSummer": {
+								"type": "String"
+							},
+							"localTime": {
+								"type": "String"
+							},
+							"mass": {
+								"type": "Double"
+							},
+							"miscValue": {
+								"type": "Double"
+							},
+							"objName": {
+								"type": "String"
+							},
+							"offset": {
+								"type": "Int16"
+							},
+							"orgName": {
+								"type": "String"
+							},
+							"pressure": {
+								"type": "Double"
+							},
+							"primaryFactor": {
+								"type": "Double"
+							},
+							"rawValue": {
+								"type": "Double"
+							},
+							"rawValueAccum": {
+								"type": "Double"
+							},
+							"runTime": {
+								"type": "Double"
+							},
+							"temperature": {
+								"type": "Double"
+							},
+							"time": {
+								"type": "Int32"
+							},
+							"timeFormat": {
+								"type": "String"
+							},
+							"uncorrVolAccum": {
+								"type": "Double"
+							},
+							"unitProfileName": {
+								"type": "String"
+							},
+							"userName": {
+								"type": "String"
+							},
+							"validate": {
+								"type": "String"
+							},
+							"volume": {
+								"type": "Double"
+							},
+							"volumeAccum": {
+								"type": "Double"
+							},
+							"volumeRatio": {
+								"type": "Double"
+							},
+							"waterVaporFactor": {
+								"type": "Double"
+							},
+							"Zratio": {
+								"type": "Double"
+							}
+						},
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
 					"translator": {
@@ -47,91 +162,56 @@
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['name']"
-								},
-								"sink": {
-									"name": "objName",
-									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['organization']"
-								},
-								"sink": {
-									"name": "orgName",
-									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['differentialPressure']['value']"
-								},
-								"sink": {
-									"name": "rawValue",
-									"type": "Double"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['editState']"
-								},
-								"sink": {
-									"name": "editStateName",
-									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['fieldTime']"
-								},
-								"sink": {
-									"name": "localTime",
-									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['granularity']"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['flowTime']['value']"
-								},
-								"sink": {
-									"name": "flowTime",
-									"type": "Single"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['runTime']['value']"
-								},
-								"sink": {
-									"name": "runTime",
-									"type": "Single"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['scadaDataQuality']"
-								},
-								"sink": {
-									"name": "dqInfoName",
-									"type": "String"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['absolutePressure']['value']"
-								},
-								"sink": {
-									"name": "pressure",
-									"type": "Single"
 								}
 							},
 							{
 								"source": {
 									"path": "$['MeasData']['Reading'][0]['temperature']['value']"
-								},
-								"sink": {
-									"name": "temperature",
-									"type": "Single"
 								}
 							}
 						],
