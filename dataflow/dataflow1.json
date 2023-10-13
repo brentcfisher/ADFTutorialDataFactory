@@ -1,0 +1,98 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SourceDataset_2pj",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DestinationDataset_2pj",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "split1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          MeasData as (Reading as (absolutePressure as (value as double), differentialPressure as (value as short), downstreamPressure as (value as double), downstreamTemperature as (value as double), editState as string, fieldTime as string, flowTime as (value as short), granularity as string, name as string, organization as string, pulseCount as integer, runTime as (value as short), scadaDataQuality as string, temperature as (value as double), upstreamPressure as (value as double), upstreamTemperature as (value as double))[])",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     validationMode: 'none',",
+				"     namespaces: true) ~> source1",
+				"source1 split(toFloat(MeasData.Reading.differentialPressure.value) != 0.0,",
+				"     toInteger(MeasData.Reading.pulseCount) != 0,",
+				"     disjoint: false) ~> split1@(diff, pulse, Unknown)",
+				"split1@diff sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          rowSequence as integer,",
+				"          objName as string,",
+				"          orgName as string,",
+				"          localTime as string,",
+				"          timeFormat as string,",
+				"          userName as string,",
+				"          editStateName as string,",
+				"          unitProfileName as string,",
+				"          dqInfoName as string,",
+				"          volume as double,",
+				"          energy as double,",
+				"          flowTime as float,",
+				"          pressure as float,",
+				"          temperature as float,",
+				"          rawValue as double,",
+				"          intermediateValue as double,",
+				"          primaryFactor as double,",
+				"          waterVaporFactor as double,",
+				"          volumeAccum as double,",
+				"          energyAccum as double,",
+				"          miscValue as double,",
+				"          time as integer,",
+				"          offset as integer,",
+				"          validate as string,",
+				"          isSummer as string,",
+				"          runTime as float,",
+				"          adjustmentCodeName as string,",
+				"          mass as double,",
+				"          Zratio as double,",
+				"          hydrocarbonDewpoint as double,",
+				"          uncorrVolAccum as double,",
+				"          gqId as integer,",
+				"          gqTimeReverse as integer,",
+				"          gqLastModTime as timestamp,",
+				"          gqHistoryTypeCode as integer,",
+				"          rawValueAccum as double,",
+				"          hostHourly as timestamp,",
+				"          fieldHourly as timestamp,",
+				"          hostDaily as timestamp,",
+				"          fieldDaily as timestamp,",
+				"          hostMonthly as timestamp,",
+				"          fieldMonthly as timestamp",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+			]
+		}
+	}
+}
