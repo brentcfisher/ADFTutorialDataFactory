@@ -1,0 +1,157 @@
+{
+	"name": "CopyPipeline_2pj",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy_2pj",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "/learningLabFileImport.xml"
+					},
+					{
+						"name": "Destination",
+						"value": "dbo.rdm_ReadingRawHy"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "XmlSource",
+						"storeSettings": {
+							"type": "SftpReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false,
+							"disableChunking": false
+						},
+						"formatSettings": {
+							"type": "XmlReadSettings",
+							"validationMode": "none"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['name']"
+								},
+								"sink": {
+									"name": "objName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['organization']"
+								},
+								"sink": {
+									"name": "objName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['differentialPressure']['value']"
+								},
+								"sink": {
+									"name": "rawValue",
+									"type": "Double"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['editState']"
+								},
+								"sink": {
+									"name": "editStateName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['fieldTime']"
+								},
+								"sink": {
+									"name": "time",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['flowTime']['value']"
+								},
+								"sink": {
+									"name": "flowTime",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['runTime']['value']"
+								},
+								"sink": {
+									"name": "runTime",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['scadaDataQuality']"
+								},
+								"sink": {
+									"name": "dqInfoName",
+									"type": "String"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['absolutePressure']['value']"
+								},
+								"sink": {
+									"name": "pressure",
+									"type": "Single"
+								}
+							},
+							{
+								"source": {
+									"path": "$['MeasData']['Reading'][0]['temperature']['value']"
+								},
+								"sink": {
+									"name": "temperature",
+									"type": "Single"
+								}
+							}
+						],
+						"mapComplexValuesToString": false
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_2pj",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DestinationDataset_2pj",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

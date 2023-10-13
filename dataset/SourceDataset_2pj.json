@@ -1,0 +1,17 @@
+{
+	"name": "SourceDataset_2pj",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "measadvtestftp",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Xml",
+		"typeProperties": {
+			"location": {
+				"type": "SftpLocation",
+				"fileName": "learningLabFileImport.xml"
+			}
+		}
+	}
+}
