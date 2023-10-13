@@ -58,7 +58,7 @@
 									"path": "$['MeasData']['Reading'][0]['organization']"
 								},
 								"sink": {
-									"name": "objName",
+									"name": "orgName",
 									"type": "String"
 								}
 							},
@@ -85,8 +85,8 @@
 									"path": "$['MeasData']['Reading'][0]['fieldTime']"
 								},
 								"sink": {
-									"name": "time",
-									"type": "Int32"
+									"name": "localTime",
+									"type": "String"
 								}
 							},
 							{
@@ -135,6 +135,7 @@
 								}
 							}
 						],
+						"collectionReference": "",
 						"mapComplexValuesToString": false
 					}
 				},
