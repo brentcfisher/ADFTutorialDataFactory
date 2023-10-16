@@ -1,5 +1,5 @@
 {
-	"name": "writeReadingRawDy",
+	"name": "REST_writeReadingRawDy",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DataGateway",

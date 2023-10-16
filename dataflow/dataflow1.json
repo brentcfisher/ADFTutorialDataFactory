@@ -15,7 +15,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "rdm_ReadingRawDy",
+						"referenceName": "SQL_table_rdm_ReadingRawDy",
 						"type": "DatasetReference"
 					},
 					"name": "sink1",
@@ -23,10 +23,24 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "rdm_ReadingRawDy",
+						"referenceName": "SQL_table_rdm_ReadingRawDy",
 						"type": "DatasetReference"
 					},
 					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "REST_writeReadingRawDy",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				},
+				{
+					"dataset": {
+						"referenceName": "REST_writeReadingRawDy",
+						"type": "DatasetReference"
+					},
+					"name": "sink4"
 				}
 			],
 			"transformations": [
@@ -206,7 +220,55 @@
 				"          temperature,",
 				"          rawValue = pulseCount,",
 				"          runTime",
-				"     )) ~> sink2"
+				"     )) ~> sink2",
+				"split1@diff sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     insertHttpMethod: 'POST',",
+				"     timeout: 30,",
+				"     requestInterval: 0,",
+				"     requestFormat: ['type' -> 'json'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          objName = name,",
+				"          orgName = organization,",
+				"          localTime = fieldTime,",
+				"          rawValue = differentialPressure,",
+				"          dqInfoName = scadaDataQuality,",
+				"          editStateName = editState,",
+				"          flowTime,",
+				"          runTime,",
+				"          pressure = absolutePressure,",
+				"          temperature",
+				"     )) ~> sink3",
+				"split1@pulse sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     insertHttpMethod: 'POST',",
+				"     timeout: 30,",
+				"     requestInterval: 0,",
+				"     requestFormat: ['type' -> 'json'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          objName = name,",
+				"          orgName = organization,",
+				"          localTime = fieldTime,",
+				"          rawValue = pulseCount,",
+				"          dqInfoName = scadaDataQuality,",
+				"          editStateName = editState,",
+				"          flowTime,",
+				"          runTime,",
+				"          pressure = absolutePressure,",
+				"          temperature",
+				"     )) ~> sink4"
 			]
 		}
 	}

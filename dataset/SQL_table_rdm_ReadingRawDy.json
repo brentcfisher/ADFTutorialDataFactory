@@ -1,5 +1,5 @@
 {
-	"name": "rdm_ReadingRawDy",
+	"name": "SQL_table_rdm_ReadingRawDy",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabase1",
