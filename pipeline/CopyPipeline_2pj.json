@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_2pj",
-				"type": "Copy",
+				"name": "Data flow1",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -13,224 +13,18 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": [
-					{
-						"name": "Source",
-						"value": "/learningLabFileImport.xml"
-					},
-					{
-						"name": "Destination",
-						"value": "dbo.rdm_ReadingRawHy"
-					}
-				],
+				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "XmlSource",
-						"storeSettings": {
-							"type": "SftpReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false,
-							"disableChunking": false
-						},
-						"formatSettings": {
-							"type": "XmlReadSettings",
-							"validationMode": "none"
-						}
+					"dataflow": {
+						"referenceName": "dataflow1",
+						"type": "DataFlowReference"
 					},
-					"sink": {
-						"type": "AzureSqlSink",
-						"sqlWriterStoredProcedureName": "[dbo].[writeReadingRawDy]",
-						"storedProcedureParameters": {
-							"adjustmentCodeName": {
-								"type": "String"
-							},
-							"chartLabelId": {
-								"type": "Int32"
-							},
-							"dqInfoName": {
-								"type": "String"
-							},
-							"editStateName": {
-								"type": "String"
-							},
-							"energy": {
-								"type": "Double"
-							},
-							"energyAccum": {
-								"type": "Double"
-							},
-							"flowTime": {
-								"type": "Double"
-							},
-							"gqHistoryTypeCode": {
-								"type": "Byte"
-							},
-							"gqId": {
-								"type": "Int32"
-							},
-							"gqLastModTime": {
-								"type": "DateTime"
-							},
-							"gqTimeReverse": {
-								"type": "Int32"
-							},
-							"hydrocarbonDewpoint": {
-								"type": "Double"
-							},
-							"intermediateValue": {
-								"type": "Double"
-							},
-							"isSummer": {
-								"type": "String"
-							},
-							"localTime": {
-								"type": "String"
-							},
-							"mass": {
-								"type": "Double"
-							},
-							"miscValue": {
-								"type": "Double"
-							},
-							"objName": {
-								"type": "String"
-							},
-							"offset": {
-								"type": "Int16"
-							},
-							"orgName": {
-								"type": "String"
-							},
-							"pressure": {
-								"type": "Double"
-							},
-							"primaryFactor": {
-								"type": "Double"
-							},
-							"rawValue": {
-								"type": "Double"
-							},
-							"rawValueAccum": {
-								"type": "Double"
-							},
-							"runTime": {
-								"type": "Double"
-							},
-							"temperature": {
-								"type": "Double"
-							},
-							"time": {
-								"type": "Int32"
-							},
-							"timeFormat": {
-								"type": "String"
-							},
-							"uncorrVolAccum": {
-								"type": "Double"
-							},
-							"unitProfileName": {
-								"type": "String"
-							},
-							"userName": {
-								"type": "String"
-							},
-							"validate": {
-								"type": "String"
-							},
-							"volume": {
-								"type": "Double"
-							},
-							"volumeAccum": {
-								"type": "Double"
-							},
-							"volumeRatio": {
-								"type": "Double"
-							},
-							"waterVaporFactor": {
-								"type": "Double"
-							},
-							"Zratio": {
-								"type": "Double"
-							}
-						},
-						"disableMetricsCollection": false
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['name']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['organization']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['differentialPressure']['value']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['editState']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['fieldTime']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['granularity']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['flowTime']['value']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['runTime']['value']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['scadaDataQuality']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['absolutePressure']['value']"
-								}
-							},
-							{
-								"source": {
-									"path": "$['MeasData']['Reading'][0]['temperature']['value']"
-								}
-							}
-						],
-						"collectionReference": "",
-						"mapComplexValuesToString": false
-					}
-				},
-				"inputs": [
-					{
-						"referenceName": "SourceDataset_2pj",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "DestinationDataset_2pj",
-						"type": "DatasetReference"
-					}
-				]
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"annotations": []
