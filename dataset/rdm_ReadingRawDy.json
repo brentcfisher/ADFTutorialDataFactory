@@ -1,0 +1,231 @@
+{
+	"name": "rdm_ReadingRawDy",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "rowSequence",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "retries",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "rejectedReasonCode",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "objName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "orgName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "meterId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "localTime",
+				"type": "nvarchar"
+			},
+			{
+				"name": "timeFormat",
+				"type": "nvarchar"
+			},
+			{
+				"name": "userName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "editStateName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "unitProfileName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "dqInfoName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "volume",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "energy",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "flowTime",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "pressure",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "temperature",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "rawValue",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "intermediateValue",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "primaryFactor",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "waterVaporFactor",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "volumeAccum",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "energyAccum",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "miscValue",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "time",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "offset",
+				"type": "smallint",
+				"precision": 5
+			},
+			{
+				"name": "validate",
+				"type": "char"
+			},
+			{
+				"name": "chartLabelId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "isSummer",
+				"type": "char"
+			},
+			{
+				"name": "runTime",
+				"type": "real",
+				"precision": 7
+			},
+			{
+				"name": "adjustmentCodeName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "mass",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "Zratio",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "hydrocarbonDewpoint",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "uncorrVolAccum",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "gqId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "gqTimeReverse",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "gqLastModTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "gqHistoryTypeCode",
+				"type": "tinyint",
+				"precision": 3
+			},
+			{
+				"name": "rawValueAccum",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "hostDaily",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "fieldDaily",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "hostMonthly",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "fieldMonthly",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "rdm_ReadingDataDy"
+		}
+	}
+}

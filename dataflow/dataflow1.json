@@ -15,15 +15,22 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "DestinationDataset_2pj",
+						"referenceName": "rdm_ReadingRawDy",
 						"type": "DatasetReference"
 					},
-					"name": "sink1"
+					"name": "sink1",
+					"description": "Export data to rdm_ReadingRawDy"
+				},
+				{
+					"name": "sink2"
 				}
 			],
 			"transformations": [
 				{
 					"name": "split1"
+				},
+				{
+					"name": "flatten1"
 				}
 			],
 			"scriptLines": [
@@ -35,15 +42,39 @@
 				"     ignoreNoFilesFound: false,",
 				"     validationMode: 'none',",
 				"     namespaces: true) ~> source1",
-				"source1 split(toFloat(MeasData.Reading.differentialPressure.value) != 0.0,",
-				"     toInteger(MeasData.Reading.pulseCount) != 0,",
+				"flatten1 split(!isNull(differentialPressure),",
+				"     !isNull(pulseCount),",
 				"     disjoint: false) ~> split1@(diff, pulse, Unknown)",
+				"source1 foldDown(unroll(MeasData.Reading, MeasData.Reading),",
+				"     mapColumn(",
+				"          name = MeasData.Reading.name,",
+				"          organization = MeasData.Reading.organization,",
+				"          granularity = MeasData.Reading.granularity,",
+				"          fieldTime = MeasData.Reading.fieldTime,",
+				"          pulseCount = MeasData.Reading.pulseCount,",
+				"          differentialPressure = MeasData.Reading.differentialPressure.value,",
+				"          scadaDataQuality = MeasData.Reading.scadaDataQuality,",
+				"          editState = MeasData.Reading.editState,",
+				"          flowTime = MeasData.Reading.flowTime.value,",
+				"          runTime = MeasData.Reading.runTime.value,",
+				"          absolutePressure = MeasData.Reading.absolutePressure.value,",
+				"          temperature = MeasData.Reading.temperature.value,",
+				"          downstreamPressure = MeasData.Reading.downstreamPressure.value,",
+				"          downstreamTemperature = MeasData.Reading.downstreamTemperature.value,",
+				"          upstreamPressure = MeasData.Reading.upstreamPressure.value,",
+				"          upstreamTemperature = MeasData.Reading.upstreamTemperature.value",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
 				"split1@diff sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          rowSequence as integer,",
+				"          retries as integer,",
+				"          rejectedReasonCode as integer,",
 				"          objName as string,",
 				"          orgName as string,",
+				"          meterId as integer,",
 				"          localTime as string,",
 				"          timeFormat as string,",
 				"          userName as string,",
@@ -65,6 +96,7 @@
 				"          time as integer,",
 				"          offset as integer,",
 				"          validate as string,",
+				"          chartLabelId as integer,",
 				"          isSummer as string,",
 				"          runTime as float,",
 				"          adjustmentCodeName as string,",
@@ -77,8 +109,6 @@
 				"          gqLastModTime as timestamp,",
 				"          gqHistoryTypeCode as integer,",
 				"          rawValueAccum as double,",
-				"          hostHourly as timestamp,",
-				"          fieldHourly as timestamp,",
 				"          hostDaily as timestamp,",
 				"          fieldDaily as timestamp,",
 				"          hostMonthly as timestamp,",
@@ -89,9 +119,26 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     format: 'table',",
+				"     batchSize: 1000,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          objName = name,",
+				"          orgName = organization,",
+				"          localTime = fieldTime,",
+				"          editStateName = editState,",
+				"          dqInfoName = scadaDataQuality,",
+				"          flowTime,",
+				"          pressure = absolutePressure,",
+				"          temperature,",
+				"          rawValue = differentialPressure,",
+				"          runTime",
+				"     )) ~> sink1",
+				"split1@pulse sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
 			]
 		}
 	}
