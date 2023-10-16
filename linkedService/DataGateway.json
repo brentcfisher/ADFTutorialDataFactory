@@ -1,0 +1,19 @@
+{
+	"name": "DataGateway",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "RestService",
+		"typeProperties": {
+			"url": "https://dev-measadv.capdev-connect.aveva.com/api/v1/measconnection/execPostproc/writeReadingRawDy",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous",
+			"authHeaders": {
+				"Bearer": {
+					"type": "SecureString",
+					"value": "**********"
+				}
+			}
+		}
+	}
+}
