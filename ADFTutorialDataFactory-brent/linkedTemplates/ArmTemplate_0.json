@@ -492,7 +492,7 @@
 				],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": "rdm_ReadingDataDy"
+					"table": "rdm_ReadingRawDy"
 				}
 			},
 			"dependsOn": [
