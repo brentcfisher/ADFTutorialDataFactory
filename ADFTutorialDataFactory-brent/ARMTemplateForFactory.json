@@ -74,7 +74,9 @@
 								"datasetParameters": {
 									"source1": {},
 									"sink1": {},
-									"sink2": {}
+									"sink2": {},
+									"sink3": {},
+									"sink4": {}
 								}
 							},
 							"staging": {},
@@ -93,52 +95,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TransformMovies')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "TransformMovies",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"MoviesDB": {},
-									"Sink": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/TransformMovies')]"
 			]
 		},
 		{
@@ -223,29 +179,27 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SourceDataset_2pj')]",
+			"name": "[concat(parameters('factoryName'), '/REST_writeReadingRawDy')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "measadvtestftp",
+					"referenceName": "DataGateway",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "Xml",
+				"type": "RestResource",
 				"typeProperties": {
-					"location": {
-						"type": "SftpLocation",
-						"fileName": "learningLabFileImport.xml"
-					}
-				}
+					"relativeUrl": "writeReadingRawDy"
+				},
+				"schema": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/measadvtestftp')]"
+				"[concat(variables('factoryId'), '/linkedServices/DataGateway')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/rdm_ReadingRawDy')]",
+			"name": "[concat(parameters('factoryName'), '/SQL_table_rdm_ReadingRawDy')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -481,23 +435,25 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/writeReadingRawDy')]",
+			"name": "[concat(parameters('factoryName'), '/SourceDataset_2pj')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "DataGateway",
+					"referenceName": "measadvtestftp",
 					"type": "LinkedServiceReference"
 				},
 				"annotations": [],
-				"type": "RestResource",
+				"type": "Xml",
 				"typeProperties": {
-					"relativeUrl": "writeReadingRawDy"
-				},
-				"schema": []
+					"location": {
+						"type": "SftpLocation",
+						"fileName": "learningLabFileImport.xml"
+					}
+				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/DataGateway')]"
+				"[concat(variables('factoryId'), '/linkedServices/measadvtestftp')]"
 			]
 		},
 		{
@@ -593,69 +549,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TransformMovies')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "MoviesDB",
-								"type": "DatasetReference"
-							},
-							"name": "MoviesDB"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "MoviesSink",
-								"type": "DatasetReference"
-							},
-							"name": "Sink"
-						}
-					],
-					"transformations": [
-						{
-							"name": "FilterYears"
-						},
-						{
-							"name": "AggregateComedyRating"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          movie as string,",
-						"          title as string,",
-						"          genres as string,",
-						"          year as string,",
-						"          Rating as string,",
-						"          {Rotton Tomato} as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> MoviesDB",
-						"MoviesDB filter(toInteger(year) >= 1910 && toInteger(year) <= 2000 && rlike(genres, 'Comedy')) ~> FilterYears",
-						"FilterYears aggregate(groupBy(year),",
-						"     AverageComedyRating = avg(toInteger(Rating))) ~> AggregateComedyRating",
-						"AggregateComedyRating sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> Sink"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/MoviesDB')]",
-				"[concat(variables('factoryId'), '/datasets/MoviesSink')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -674,7 +567,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "rdm_ReadingRawDy",
+								"referenceName": "SQL_table_rdm_ReadingRawDy",
 								"type": "DatasetReference"
 							},
 							"name": "sink1",
@@ -682,10 +575,24 @@
 						},
 						{
 							"dataset": {
-								"referenceName": "rdm_ReadingRawDy",
+								"referenceName": "SQL_table_rdm_ReadingRawDy",
 								"type": "DatasetReference"
 							},
 							"name": "sink2"
+						},
+						{
+							"dataset": {
+								"referenceName": "REST_writeReadingRawDy",
+								"type": "DatasetReference"
+							},
+							"name": "sink3"
+						},
+						{
+							"dataset": {
+								"referenceName": "REST_writeReadingRawDy",
+								"type": "DatasetReference"
+							},
+							"name": "sink4"
 						}
 					],
 					"transformations": [
@@ -865,13 +772,62 @@
 						"          temperature,",
 						"          rawValue = pulseCount,",
 						"          runTime",
-						"     )) ~> sink2"
+						"     )) ~> sink2",
+						"split1@diff sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     insertHttpMethod: 'POST',",
+						"     timeout: 30,",
+						"     requestInterval: 0,",
+						"     requestFormat: ['type' -> 'json'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          objName = name,",
+						"          orgName = organization,",
+						"          localTime = fieldTime,",
+						"          rawValue = differentialPressure,",
+						"          dqInfoName = scadaDataQuality,",
+						"          editStateName = editState,",
+						"          flowTime,",
+						"          runTime,",
+						"          pressure = absolutePressure,",
+						"          temperature",
+						"     )) ~> sink3",
+						"split1@pulse sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     insertHttpMethod: 'POST',",
+						"     timeout: 30,",
+						"     requestInterval: 0,",
+						"     requestFormat: ['type' -> 'json'],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          objName = name,",
+						"          orgName = organization,",
+						"          localTime = fieldTime,",
+						"          rawValue = pulseCount,",
+						"          dqInfoName = scadaDataQuality,",
+						"          editStateName = editState,",
+						"          flowTime,",
+						"          runTime,",
+						"          pressure = absolutePressure,",
+						"          temperature",
+						"     )) ~> sink4"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_2pj')]",
-				"[concat(variables('factoryId'), '/datasets/rdm_ReadingRawDy')]"
+				"[concat(variables('factoryId'), '/datasets/SQL_table_rdm_ReadingRawDy')]",
+				"[concat(variables('factoryId'), '/datasets/REST_writeReadingRawDy')]"
 			]
 		}
 	]
