@@ -23,6 +23,9 @@
 		"AzureSqlDatabase1_properties_typeProperties_connectionString_secretName": {
 			"value": "SQL-CONNECTION-STRING-904ab117-ffda-46e9-aabd-869b63daaafa"
 		},
+		"DataGateway_properties_typeProperties_url": {
+			"value": "https://dev-measadv.capdev-connect.aveva.com/api/v1/measconnection/execPostproc/"
+		},
 		"measadvtestftp_properties_typeProperties_host": {
 			"value": "measadvtestftp.blob.core.windows.net"
 		},

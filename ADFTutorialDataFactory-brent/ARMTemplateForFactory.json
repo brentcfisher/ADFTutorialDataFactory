@@ -31,6 +31,10 @@
 			"type": "string",
 			"defaultValue": "SQL-CONNECTION-STRING-904ab117-ffda-46e9-aabd-869b63daaafa"
 		},
+		"DataGateway_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dev-measadv.capdev-connect.aveva.com/api/v1/measconnection/execPostproc/"
+		},
 		"measadvtestftp_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "measadvtestftp.blob.core.windows.net"
@@ -51,8 +55,8 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Copy_2pj",
-						"type": "Copy",
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -61,146 +65,25 @@
 							"secureOutput": false,
 							"secureInput": false
 						},
-						"userProperties": [
-							{
-								"name": "Source",
-								"value": "/learningLabFileImport.xml"
-							},
-							{
-								"name": "Destination",
-								"value": "dbo.rdm_ReadingRawHy"
-							}
-						],
+						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "XmlSource",
-								"storeSettings": {
-									"type": "SftpReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false,
-									"disableChunking": false
-								},
-								"formatSettings": {
-									"type": "XmlReadSettings",
-									"validationMode": "none"
+							"dataflow": {
+								"referenceName": "dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {},
+									"sink2": {}
 								}
 							},
-							"sink": {
-								"type": "AzureSqlSink"
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
 							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['name']"
-										},
-										"sink": {
-											"name": "objName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['organization']"
-										},
-										"sink": {
-											"name": "orgName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['differentialPressure']['value']"
-										},
-										"sink": {
-											"name": "rawValue",
-											"type": "Double"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['editState']"
-										},
-										"sink": {
-											"name": "editStateName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['fieldTime']"
-										},
-										"sink": {
-											"name": "localTime",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['flowTime']['value']"
-										},
-										"sink": {
-											"name": "flowTime",
-											"type": "Single"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['runTime']['value']"
-										},
-										"sink": {
-											"name": "runTime",
-											"type": "Single"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['scadaDataQuality']"
-										},
-										"sink": {
-											"name": "dqInfoName",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['absolutePressure']['value']"
-										},
-										"sink": {
-											"name": "pressure",
-											"type": "Single"
-										}
-									},
-									{
-										"source": {
-											"path": "$['MeasData']['Reading'][0]['temperature']['value']"
-										},
-										"sink": {
-											"name": "temperature",
-											"type": "Single"
-										}
-									}
-								],
-								"collectionReference": "",
-								"mapComplexValuesToString": false
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SourceDataset_2pj",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DestinationDataset_2pj",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"policy": {
@@ -209,8 +92,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SourceDataset_2pj')]",
-				"[concat(variables('factoryId'), '/datasets/DestinationDataset_2pj')]"
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
 			]
 		},
 		{
@@ -257,280 +139,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/TransformMovies')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DestinationDataset_2pj')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "AzureSqlDatabase1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "AzureSqlTable",
-				"schema": [
-					{
-						"name": "rowSequence",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "objName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "orgName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "localTime",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "timeFormat",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "userName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "editStateName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "unitProfileName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "dqInfoName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "volume",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "energy",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "flowTime",
-						"type": "real",
-						"precision": 24,
-						"scale": 0
-					},
-					{
-						"name": "pressure",
-						"type": "real",
-						"precision": 24,
-						"scale": 0
-					},
-					{
-						"name": "temperature",
-						"type": "real",
-						"precision": 24,
-						"scale": 0
-					},
-					{
-						"name": "rawValue",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "intermediateValue",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "primaryFactor",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "waterVaporFactor",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "volumeAccum",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "energyAccum",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "miscValue",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "time",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "offset",
-						"type": "smallint",
-						"precision": 5,
-						"scale": 0
-					},
-					{
-						"name": "validate",
-						"type": "char",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "isSummer",
-						"type": "char",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "runTime",
-						"type": "real",
-						"precision": 24,
-						"scale": 0
-					},
-					{
-						"name": "adjustmentCodeName",
-						"type": "nvarchar",
-						"precision": 0,
-						"scale": 0
-					},
-					{
-						"name": "mass",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "Zratio",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "hydrocarbonDewpoint",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "uncorrVolAccum",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "gqId",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "gqTimeReverse",
-						"type": "int",
-						"precision": 10,
-						"scale": 0
-					},
-					{
-						"name": "gqLastModTime",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "gqHistoryTypeCode",
-						"type": "tinyint",
-						"precision": 3,
-						"scale": 0
-					},
-					{
-						"name": "rawValueAccum",
-						"type": "float",
-						"precision": 53,
-						"scale": 0
-					},
-					{
-						"name": "hostHourly",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "fieldHourly",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "hostDaily",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "fieldDaily",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "hostMonthly",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					},
-					{
-						"name": "fieldMonthly",
-						"type": "datetime",
-						"precision": 23,
-						"scale": 3
-					}
-				],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "rdm_ReadingRawHy"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
 			]
 		},
 		{
@@ -637,6 +245,262 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/rdm_ReadingRawDy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabase1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "rowSequence",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "retries",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "rejectedReasonCode",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "objName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "orgName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "meterId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "localTime",
+						"type": "nvarchar"
+					},
+					{
+						"name": "timeFormat",
+						"type": "nvarchar"
+					},
+					{
+						"name": "userName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "editStateName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "unitProfileName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "dqInfoName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "volume",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "energy",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "flowTime",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "pressure",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "temperature",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "rawValue",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "intermediateValue",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "primaryFactor",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "waterVaporFactor",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "volumeAccum",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "energyAccum",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "miscValue",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "time",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "offset",
+						"type": "smallint",
+						"precision": 5
+					},
+					{
+						"name": "validate",
+						"type": "char"
+					},
+					{
+						"name": "chartLabelId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "isSummer",
+						"type": "char"
+					},
+					{
+						"name": "runTime",
+						"type": "real",
+						"precision": 7
+					},
+					{
+						"name": "adjustmentCodeName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "mass",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "Zratio",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "hydrocarbonDewpoint",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "uncorrVolAccum",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "gqId",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "gqTimeReverse",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "gqLastModTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "gqHistoryTypeCode",
+						"type": "tinyint",
+						"precision": 3
+					},
+					{
+						"name": "rawValueAccum",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "hostDaily",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "fieldDaily",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "hostMonthly",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "fieldMonthly",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "rdm_ReadingDataDy"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlDatabase1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/writeReadingRawDy')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "DataGateway",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {
+					"relativeUrl": "writeReadingRawDy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/DataGateway')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/ADLSGen2')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -687,6 +551,21 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DataGateway')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('DataGateway_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/measadvtestftp')]",
@@ -774,6 +653,225 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/MoviesDB')]",
 				"[concat(variables('factoryId'), '/datasets/MoviesSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/dataflow1')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SourceDataset_2pj",
+								"type": "DatasetReference"
+							},
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "rdm_ReadingRawDy",
+								"type": "DatasetReference"
+							},
+							"name": "sink1",
+							"description": "Export data to rdm_ReadingRawDy"
+						},
+						{
+							"dataset": {
+								"referenceName": "rdm_ReadingRawDy",
+								"type": "DatasetReference"
+							},
+							"name": "sink2"
+						}
+					],
+					"transformations": [
+						{
+							"name": "split1"
+						},
+						{
+							"name": "flatten1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          MeasData as (Reading as (absolutePressure as (value as double), differentialPressure as (value as short), downstreamPressure as (value as double), downstreamTemperature as (value as double), editState as string, fieldTime as string, flowTime as (value as short), granularity as string, name as string, organization as string, pulseCount as integer, runTime as (value as short), scadaDataQuality as string, temperature as (value as double), upstreamPressure as (value as double), upstreamTemperature as (value as double))[])",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     validationMode: 'none',",
+						"     namespaces: true) ~> source1",
+						"flatten1 split(!isNull(differentialPressure),",
+						"     !isNull(pulseCount),",
+						"     disjoint: false) ~> split1@(diff, pulse, Unknown)",
+						"source1 foldDown(unroll(MeasData.Reading, MeasData.Reading),",
+						"     mapColumn(",
+						"          name = MeasData.Reading.name,",
+						"          organization = MeasData.Reading.organization,",
+						"          granularity = MeasData.Reading.granularity,",
+						"          fieldTime = MeasData.Reading.fieldTime,",
+						"          pulseCount = MeasData.Reading.pulseCount,",
+						"          differentialPressure = MeasData.Reading.differentialPressure.value,",
+						"          scadaDataQuality = MeasData.Reading.scadaDataQuality,",
+						"          editState = MeasData.Reading.editState,",
+						"          flowTime = MeasData.Reading.flowTime.value,",
+						"          runTime = MeasData.Reading.runTime.value,",
+						"          absolutePressure = MeasData.Reading.absolutePressure.value,",
+						"          temperature = MeasData.Reading.temperature.value,",
+						"          downstreamPressure = MeasData.Reading.downstreamPressure.value,",
+						"          downstreamTemperature = MeasData.Reading.downstreamTemperature.value,",
+						"          upstreamPressure = MeasData.Reading.upstreamPressure.value,",
+						"          upstreamTemperature = MeasData.Reading.upstreamTemperature.value",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> flatten1",
+						"split1@diff sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          rowSequence as integer,",
+						"          retries as integer,",
+						"          rejectedReasonCode as integer,",
+						"          objName as string,",
+						"          orgName as string,",
+						"          meterId as integer,",
+						"          localTime as string,",
+						"          timeFormat as string,",
+						"          userName as string,",
+						"          editStateName as string,",
+						"          unitProfileName as string,",
+						"          dqInfoName as string,",
+						"          volume as double,",
+						"          energy as double,",
+						"          flowTime as float,",
+						"          pressure as float,",
+						"          temperature as float,",
+						"          rawValue as double,",
+						"          intermediateValue as double,",
+						"          primaryFactor as double,",
+						"          waterVaporFactor as double,",
+						"          volumeAccum as double,",
+						"          energyAccum as double,",
+						"          miscValue as double,",
+						"          time as integer,",
+						"          offset as integer,",
+						"          validate as string,",
+						"          chartLabelId as integer,",
+						"          isSummer as string,",
+						"          runTime as float,",
+						"          adjustmentCodeName as string,",
+						"          mass as double,",
+						"          Zratio as double,",
+						"          hydrocarbonDewpoint as double,",
+						"          uncorrVolAccum as double,",
+						"          gqId as integer,",
+						"          gqTimeReverse as integer,",
+						"          gqLastModTime as timestamp,",
+						"          gqHistoryTypeCode as integer,",
+						"          rawValueAccum as double,",
+						"          hostDaily as timestamp,",
+						"          fieldDaily as timestamp,",
+						"          hostMonthly as timestamp,",
+						"          fieldMonthly as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     batchSize: 1000,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          objName = name,",
+						"          orgName = organization,",
+						"          localTime = fieldTime,",
+						"          editStateName = editState,",
+						"          dqInfoName = scadaDataQuality,",
+						"          flowTime,",
+						"          pressure = absolutePressure,",
+						"          temperature,",
+						"          rawValue = differentialPressure,",
+						"          runTime",
+						"     )) ~> sink1",
+						"split1@pulse sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          rowSequence as integer,",
+						"          retries as integer,",
+						"          rejectedReasonCode as integer,",
+						"          objName as string,",
+						"          orgName as string,",
+						"          meterId as integer,",
+						"          localTime as string,",
+						"          timeFormat as string,",
+						"          userName as string,",
+						"          editStateName as string,",
+						"          unitProfileName as string,",
+						"          dqInfoName as string,",
+						"          volume as double,",
+						"          energy as double,",
+						"          flowTime as float,",
+						"          pressure as float,",
+						"          temperature as float,",
+						"          rawValue as double,",
+						"          intermediateValue as double,",
+						"          primaryFactor as double,",
+						"          waterVaporFactor as double,",
+						"          volumeAccum as double,",
+						"          energyAccum as double,",
+						"          miscValue as double,",
+						"          time as integer,",
+						"          offset as integer,",
+						"          validate as string,",
+						"          chartLabelId as integer,",
+						"          isSummer as string,",
+						"          runTime as float,",
+						"          adjustmentCodeName as string,",
+						"          mass as double,",
+						"          Zratio as double,",
+						"          hydrocarbonDewpoint as double,",
+						"          uncorrVolAccum as double,",
+						"          gqId as integer,",
+						"          gqTimeReverse as integer,",
+						"          gqLastModTime as timestamp,",
+						"          gqHistoryTypeCode as integer,",
+						"          rawValueAccum as double,",
+						"          hostDaily as timestamp,",
+						"          fieldDaily as timestamp,",
+						"          hostMonthly as timestamp,",
+						"          fieldMonthly as timestamp",
+						"     ),",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError',",
+						"     mapColumn(",
+						"          objName = name,",
+						"          orgName = organization,",
+						"          localTime = fieldTime,",
+						"          editStateName = editState,",
+						"          dqInfoName = scadaDataQuality,",
+						"          flowTime,",
+						"          pressure = absolutePressure,",
+						"          temperature,",
+						"          rawValue = pulseCount,",
+						"          runTime",
+						"     )) ~> sink2"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SourceDataset_2pj')]",
+				"[concat(variables('factoryId'), '/datasets/rdm_ReadingRawDy')]"
 			]
 		}
 	]

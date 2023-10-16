@@ -31,6 +31,10 @@
 			"type": "string",
 			"defaultValue": "SQL-CONNECTION-STRING-904ab117-ffda-46e9-aabd-869b63daaafa"
 		},
+		"DataGateway_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dev-measadv.capdev-connect.aveva.com/api/v1/measconnection/execPostproc/"
+		},
 		"measadvtestftp_properties_typeProperties_host": {
 			"type": "string",
 			"defaultValue": "measadvtestftp.blob.core.windows.net"
@@ -80,6 +84,9 @@
 					},
 					"AzureKeyVault1_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					},
+					"DataGateway_properties_typeProperties_url": {
+						"value": "[parameters('DataGateway_properties_typeProperties_url')]"
 					},
 					"measadvtestftp_properties_typeProperties_host": {
 						"value": "[parameters('measadvtestftp_properties_typeProperties_host')]"
