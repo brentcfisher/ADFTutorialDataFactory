@@ -86,6 +86,463 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Data flow1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "output",
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "AzureSqlSink",
+								"sqlWriterStoredProcedureName": "[[dbo].[writeReadingRawDy2]",
+								"sqlWriterTableType": "writeReadingRawDyParams",
+								"storedProcedureTableTypeParameterName": "params",
+								"disableMetricsCollection": false
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "objName",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "objName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "orgName",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "orgName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "localTime",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "localTime",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "timeFormat"
+										},
+										"sink": {
+											"name": "timeFormat",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "userName"
+										},
+										"sink": {
+											"name": "userName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "editStateName",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "editStateName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "unitProfileName"
+										},
+										"sink": {
+											"name": "unitProfileName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "dqInfoName",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "dqInfoName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									},
+									{
+										"source": {
+											"name": "volume"
+										},
+										"sink": {
+											"name": "volume",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "energy"
+										},
+										"sink": {
+											"name": "energy",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "flowTime",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "flowTime",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "pressure",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "pressure",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "temperature",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "temperature",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "rawValue",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "rawValue",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "intermediateValue"
+										},
+										"sink": {
+											"name": "intermediateValue",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "primaryFactor"
+										},
+										"sink": {
+											"name": "primaryFactor",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "waterVaporFactor"
+										},
+										"sink": {
+											"name": "waterVaporFactor",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "volumeAccum"
+										},
+										"sink": {
+											"name": "volumeAccum",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "energyAccum"
+										},
+										"sink": {
+											"name": "energyAccum",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "miscValue"
+										},
+										"sink": {
+											"name": "miscValue",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "validate"
+										},
+										"sink": {
+											"name": "validate",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "isSummer"
+										},
+										"sink": {
+											"name": "isSummer",
+											"type": "String",
+											"physicalType": "char"
+										}
+									},
+									{
+										"source": {
+											"name": "runTime",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "runTime",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "chartLabelId"
+										},
+										"sink": {
+											"name": "chartLabelId",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "time"
+										},
+										"sink": {
+											"name": "time",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "offset"
+										},
+										"sink": {
+											"name": "offset",
+											"type": "Int16",
+											"physicalType": "smallint"
+										}
+									},
+									{
+										"source": {
+											"name": "mass"
+										},
+										"sink": {
+											"name": "mass",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "Zratio"
+										},
+										"sink": {
+											"name": "Zratio",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "hydrocarbonDewpoint"
+										},
+										"sink": {
+											"name": "hydrocarbonDewpoint",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "uncorrVolAccum"
+										},
+										"sink": {
+											"name": "uncorrVolAccum",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "gqId"
+										},
+										"sink": {
+											"name": "gqId",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "gqTimeReverse"
+										},
+										"sink": {
+											"name": "gqTimeReverse",
+											"type": "Int32",
+											"physicalType": "int"
+										}
+									},
+									{
+										"source": {
+											"name": "gqLastModTime"
+										},
+										"sink": {
+											"name": "gqLastModTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										}
+									},
+									{
+										"source": {
+											"name": "gqHistoryTypeCode"
+										},
+										"sink": {
+											"name": "gqHistoryTypeCode",
+											"type": "Byte",
+											"physicalType": "tinyint"
+										}
+									},
+									{
+										"source": {
+											"name": "rawValueAccum"
+										},
+										"sink": {
+											"name": "rawValueAccum",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "volumeRatio"
+										},
+										"sink": {
+											"name": "volumeRatio",
+											"type": "Double",
+											"physicalType": "float"
+										}
+									},
+									{
+										"source": {
+											"name": "adjustmentCodeName"
+										},
+										"sink": {
+											"name": "adjustmentCodeName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "MoviesSink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_table_rdm_ReadingRawDy",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -94,7 +551,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/dataflow1')]"
+				"[concat(variables('factoryId'), '/dataflows/dataflow1')]",
+				"[concat(variables('factoryId'), '/datasets/MoviesSink')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_table_rdm_ReadingRawDy')]"
 			]
 		},
 		{
