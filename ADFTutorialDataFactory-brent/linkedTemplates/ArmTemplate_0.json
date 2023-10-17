@@ -88,7 +88,13 @@
 				"typeProperties": {
 					"url": "[parameters('DataGateway_properties_typeProperties_url')]",
 					"enableServerCertificateValidation": true,
-					"authenticationType": "Anonymous"
+					"authenticationType": "Anonymous",
+					"authHeaders": {
+						"Bearer": {
+							"type": "SecureString",
+							"value": "**********"
+						}
+					}
 				}
 			},
 			"dependsOn": []
@@ -533,14 +539,14 @@
 						},
 						{
 							"dataset": {
-								"referenceName": "REST_writeReadingRawDy",
+								"referenceName": "MoviesSink",
 								"type": "DatasetReference"
 							},
 							"name": "sink3"
 						},
 						{
 							"dataset": {
-								"referenceName": "REST_writeReadingRawDy",
+								"referenceName": "MoviesSink",
 								"type": "DatasetReference"
 							},
 							"name": "sink4"
@@ -726,14 +732,10 @@
 						"     )) ~> sink2",
 						"split1@diff sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     insertHttpMethod: 'POST',",
-						"     timeout: 30,",
-						"     requestInterval: 0,",
-						"     requestFormat: ['type' -> 'json'],",
+						"     filePattern:'readingDyDiff[n]',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
@@ -750,14 +752,10 @@
 						"     )) ~> sink3",
 						"split1@pulse sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     insertHttpMethod: 'POST',",
-						"     timeout: 30,",
-						"     requestInterval: 0,",
-						"     requestFormat: ['type' -> 'json'],",
+						"     filePattern:'readingDyPulse[n]',",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
@@ -778,7 +776,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SourceDataset_2pj')]",
 				"[concat(variables('factoryId'), '/datasets/SQL_table_rdm_ReadingRawDy')]",
-				"[concat(variables('factoryId'), '/datasets/REST_writeReadingRawDy')]"
+				"[concat(variables('factoryId'), '/datasets/MoviesSink')]"
 			]
 		},
 		{
